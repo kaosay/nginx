@@ -2,7 +2,7 @@
 high avaliable nginx configuration
 
 ## Add brotli module to nginx
-
+```
 git clone --recurse-submodules https://github.com/google/ngx_brotli.git
 
 wget https://nginx.org/download/nginx-1.24.0.tar.gz
@@ -42,4 +42,4 @@ http {
     gzip_static on;
     gzip_types 同上;
 }
-
+```
