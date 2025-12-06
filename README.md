@@ -43,3 +43,26 @@ http {
     gzip_types 同上;
 }
 ```
+
+## Add GeoIP2 module to nginx
+### modules-enabled/50-mod-http-geoip2.conf
+```
+load_module modules/ngx_http_geoip2_module.so;
+load_module modules/ngx_stream_geoip2_module.so;
+```
+```
+    location /forbidden {
+            root /var/www/html/web/pages/en;     
+            rewrite ^ /test.html break;
+    }
+
+    location / {
+
+        if ($block_china_hk_tw) {
+                return 302 /forbidden;
+        }
+
+        proxy_pass http://localhost:123;
+    }
+```
+
