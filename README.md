@@ -1,6 +1,11 @@
 # nginx
 high avaliable nginx configuration
 
+## Install nginx-full
+```
+sudo apt install  nginx-full     libnginx-mod-http-brotli-filter     libnginx-mod-http-brotli-static     libnginx-mod-http-geoip2     libnginx-mod-http-headers-more-filter
+```
+
 ## Add brotli module to nginx
 ```
 git clone --recurse-submodules https://github.com/google/ngx_brotli.git
@@ -45,11 +50,37 @@ http {
 ```
 
 ## Add GeoIP2 module to nginx
-### modules-enabled/50-mod-http-geoip2.conf
+#### modules-enabled/50-mod-http-geoip2.conf
 ```
 load_module modules/ngx_http_geoip2_module.so;
 load_module modules/ngx_stream_geoip2_module.so;
 ```
+
+```
+http {
+        ########
+        # Geoip2 Settings
+        geoip2 /usr/share/GeoIP/GeoLite2-Country.mmdb {
+            # 启用自动重载将使nginx在指定的时间间隔内检查数据库的修改时间, 并在数据库已更改时重新加载它。
+            auto_reload 168h;
+            #$geoip2_metadata_country_build metadata last_check;
+            #$geoip2_data_country_code country iso_code;
+            $geoip2_country country iso_code;
+        }
+
+        map $geoip2_country $block_china_hk_tw {
+            default 0;
+            CN      1;
+            HK      1;
+            TW      1;
+        }
+}
+
+sudo mkdir /usr/share/GeoIP/
+sudo wget https://git.io/GeoLite2-Country.mmdb
+```
+
+
 ```
     location /forbidden {
             root /var/www/html/web/pages/en;     
