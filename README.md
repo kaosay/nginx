@@ -57,6 +57,7 @@ load_module modules/ngx_stream_geoip2_module.so;
 ```
 
 ```
+include /etc/nginx/modules-enabled/*.conf;
 http {
         ########
         # Geoip2 Settings
