@@ -98,3 +98,67 @@ sudo wget https://git.io/GeoLite2-Country.mmdb
     }
 ```
 
+## /etc/nginx/conf.d/performance.conf
+```
+# /etc/nginx/conf.d/performance.conf
+# 工作进程优化
+worker_processes auto;
+worker_rlimit_nofile 65535;
+
+events {
+    worker_connections 4096;
+    use epoll;
+    multi_accept on;
+}
+
+http {
+    # 连接优化
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 30;
+    keepalive_requests 100;
+
+    # 缓冲区优化
+    client_body_buffer_size 128k;
+    client_max_body_size 100m;
+    client_header_buffer_size 1k;
+    large_client_header_buffers 4 4k;
+    output_buffers 1 32k;
+    postpone_output 1460;
+
+    # 压缩优化
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_types
+        text/plain
+        text/css
+        text/xml
+        text/javascript
+        application/json
+        application/javascript
+        application/xml+rss
+        application/atom+xml
+        image/svg+xml;
+
+    # 静态文件缓存
+    location ~* \.(jpg|jpeg|png|gif|ico|css|js|pdf|txt|woff|woff2)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        add_header Vary Accept-Encoding;
+        access_log off;
+    }
+
+    # 开启HTTP/2
+    listen 443 ssl http2;
+
+    # SSL优化
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+    ssl_buffer_size 8k;
+}
+```
+
