@@ -163,7 +163,7 @@ http {
 ```
 
 ## nginx 安全策略
-Insert into http or server block
+####Insert into http or server block
 security header
 ```
         #防止 MIME 类型嗅探攻击
