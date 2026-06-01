@@ -162,3 +162,25 @@ http {
 }
 ```
 
+## nginx 安全策略
+Insert into http or server block
+security header
+```
+        #防止 MIME 类型嗅探攻击
+        add_header X-Content-Type-Options        "nosniff" always;
+
+        #防止点击劫持 (Clickjacking)
+        add_header X-Frame-Options               "DENY" always;
+
+        #控制 Referer 信息泄露
+        add_header Referrer-Policy              "strict-origin-when-cross-origin" always;
+
+        #限制浏览器功能权限
+        add_header Permissions-Policy           "geolocation=(), microphone=(), camera=(), payment=()" always;
+
+        #控制浏览器允许加载哪些资源，防御 XSS 和数据注入攻击
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self'; img-src * data:; object-src 'none';" always;
+
+        #强制 HTTPS 访问（HSTS），至少一年
+        add_header Strict-Transport-Security    "max-age=31536000; includeSubDomains; preload" always;
+```
