@@ -185,7 +185,7 @@ security header
         add_header Strict-Transport-Security    "max-age=31536000; includeSubDomains; preload" always;
 ```
 
-## CF-Connecting-IP 覆盖整个 X-Forwarded-For
+## CF-Connecting-IP 覆盖整个 X-Forwarded-For(防止篡改header)
 ```
 location / {
     # 直接从 Cloudflare 头部获取真实 IP，忽略其他
