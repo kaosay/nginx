@@ -184,3 +184,14 @@ security header
         #强制 HTTPS 访问（HSTS），至少一年
         add_header Strict-Transport-Security    "max-age=31536000; includeSubDomains; preload" always;
 ```
+
+## CF-Connecting-IP 覆盖整个 X-Forwarded-For
+```
+location / {
+    # 直接从 Cloudflare 头部获取真实 IP，忽略其他
+    proxy_set_header X-Real-IP $http_cf_connecting_ip;
+    proxy_set_header X-Forwarded-For $http_cf_connecting_ip;  # ✅ 直接覆盖
+    
+    # 不再使用 $remote_addr 或 $proxy_add_x_forwarded_for
+}
+```
